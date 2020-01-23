@@ -1,0 +1,4 @@
+class GameState:
+
+	print("hello")
+

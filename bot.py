@@ -1,0 +1,3 @@
+class Bot:
+	
+	print("hello")
