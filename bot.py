@@ -1,3 +1,6 @@
 class Bot:
-	
-	print("hello")
+	def Update(self):
+		print("Default behavior")
+
+	def Draw(self):
+		print("Default draw")
