@@ -1,50 +1,44 @@
-import pygame
-import block
-import bot
-import jack
-import sunny
+from termcolor import colored
+import pygame as pg
+from bot import Bot
+
 
 class GameState:
 
-	def __init__(self, bWidth = 200, bHeight = 100):
-		pygame.init()
+    def __init__(self, bWidth=200, bHeight=100):
+        pg.init()
 
-		self.Bots = list()
-		self.Board = list()
-		self.clock = pygame.time.Clock()
-		self.gameDisplay = pygame.display.set_mode((800,600))
-		pygame.display.set_caption("Armageddon Blitz")
+        self.Bots = dict()
+        self.Board = list()
+        self.clock = pg.time.Clock()
+        self.gameDisplay = pg.display.set_mode((800, 600))
+        pg.display.set_caption("Armageddon Blitz")
 
-		for row in range(bWidth):
-			self.Board[row].append( list() )
-			for col in range(bHeight):
-				self.Board[row][col] = Block()
+        for row in range(bWidth):
+            self.Board[row].append(list())
+            for col in range(bHeight):
+                self.Board[row][col] = 0
 
-	def AddBot(self, bot : Bot ):
-		self.Bots.append( bot )
+    def add_bot(self, bot: Bot, color: pg.Color):
+        self.Bots.update({bot.id: (bot, color)})
 
-	def RunGameLoop( self ):
-		while( True ):
-			self.Update()
-			self.Draw()
-			self.clock.tick(60)
+    def run_game_loop(self):
+        while True:
+            self.update()
+            self.draw()
+            self.clock.tick(60)
 
-	def Update(self):
-		for bot in self.Bots:
-			bot.Update()
+    def update(self):
+        for bot in self.Bots:
+            bot.move(self.Board)
 
-	def Draw(self):
-		for y in range(0, len(self.Board)):
-			for x in range(0, len(self.Board[y])):
+        for bot in self.Bots:
+            pos = bot.get_pos()
+            value = self.Board[pos[0]][pos[1]]
+            if(value != bot.id) or (value != 0):
+                print(colored(f"Player {id} has been killed :("))
 
-				block = self.Board[y][x]
+    def draw(self):
+        pass
 
-				for bot in self.Bots: 
-					if block.owner == bot.id:
-						drawRect(x*10, y*10, (x+1)*10, (y+1)*10, bot.color)
 
-#MAIN
-game = GameState()
-game.AddBot(Sunny())
-game.AddBot(Jack())
-game.RunGameLoop()
