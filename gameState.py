@@ -22,7 +22,7 @@ class GameState:
         self.board = list()
 
         self.clock = pg.time.Clock()
-        self.gameDisplay = pg.display.set_mode((b_width * square_len, b_height * square_len))
+        self.screen = pg.display.set_mode((b_width * square_len, b_height * square_len))
         pg.display.set_caption("Armageddon Blitz")
 
         for row in range(b_width):
@@ -49,7 +49,7 @@ class GameState:
                     running = False
             #self.update()
             self.draw()
-            self.clock.tick(60)
+            #self.clock.tick(60)
 
     def update(self) -> None:
         """
@@ -76,6 +76,16 @@ class GameState:
         """
         Draws all components to the screen
         """
+        bg_colour = (255, 255, 255)
+        self.screen.fill(bg_colour)
+
+        for x in self.b_width:
+            for y in self.b_height:
+                pid = self.board[x][y]
+                colour = self.bots.get(pid)[1]
+                self.screen.set
+
+        pg.display.flip()
         pass
 
 
