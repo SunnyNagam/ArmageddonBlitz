@@ -55,20 +55,38 @@ class GameState:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     running = False
-            #self.update()
+            self.update()
             self.draw()
-            #self.clock.tick(60)
+            self.clock.tick(60)
 
     def update(self) -> None:
         """
         Update the game state and all the bot states
         """
-        for bot in self.bots:
-            bot_state = self.bot_states[bot.pid]
+        # Figure out all the bots' moves
+        moves = dict()
+        for bot in self.bots.values():
+            bot_state = self.bot_states.get(bot.pid)
             move = bot.move(self.board, bot_state)
-            bot_state.move(move)
 
-        for bot in self.bot_states:
+            update_tile = True
+            for pid, other_bot in self.bot_states.items():
+                if pid == bot.pid:
+                    continue
+                elif other_bot.pos == bot_state.pos:
+                    update_tile = False
+
+            if update_tile:
+                self.board[bot_state.pos[0]][bot_state.pos[1]] = bot.pid
+
+            moves.update({bot.pid: move})
+
+        # Actually update the bots now
+        for pid, move in moves.items():
+            self.bot_states.get(pid).move(move)
+
+        # Determine if any of the bots died
+        for bot in self.bot_states.values():
             pos = bot.pos
             # Kill any bots that ran off the board
             if pos[0] < 0 or pos[0] > self.b_width\
@@ -76,8 +94,8 @@ class GameState:
                 self.bots.pop(bot.pid)
 
             value = self.board[pos[0]][pos[1]]
-            if(value != bot.id) or (value != 0):
-                print(colored(f"Player {id} has been killed :("))
+            if(value != bot.pid) and (value != 0):
+                print(colored(f"Player {bot.pid} has been killed :("))
                 self.bots.pop(bot.pid)
 
     def draw(self) -> None:
