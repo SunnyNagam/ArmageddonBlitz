@@ -100,16 +100,16 @@ class GameState:
             # Kill any bots that ran off the board
             if pos[0] < 0 or pos[0] > self.b_width\
                     or pos[1] < 0 or pos[1] > self.b_height:
-                self.bots.pop(bot.pid)
+                dead_bots.append(bot.pid)
 
             value = self.board[pos[0]][pos[1]]
             if(value != bot.pid) and (value != 0):
-                print(colored(f"Player {bot.pid} has been killed :("))
                 dead_bots.append(bot.pid)
 
         for pid in dead_bots:
-            self.bots.pop(pid)
-            self.bot_states.pop(pid)
+            if pid in self.bots:
+                print(colored(f"Player {pid} has been killed :("))
+                self.bots.pop(pid)
 
     def draw(self) -> None:
         """
