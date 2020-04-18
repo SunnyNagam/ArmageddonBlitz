@@ -30,16 +30,31 @@ class GameState:
             for col in range(b_height):
                 self.board.append(0)
 
-    def add_bot(self, bot: Bot, color: pg.Color):
+    def add_bot(self, bot: Bot, color: pg.Color) -> None:
+        """
+        Add a bot to the competitors in the game
+        :param bot: The bot to add
+        :param color: The bot's color to be used when coloring rectangles
+        """
         self.bots.update({bot.pid: (bot, color)})
 
-    def run_game_loop(self):
-        while True:
+    def run_game_loop(self) -> None:
+        """
+        This runs the game loop. Will not stop until the game is over
+        """
+        running = True
+        while running:
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    running = False
             #self.update()
             self.draw()
             self.clock.tick(60)
 
-    def update(self):
+    def update(self) -> None:
+        """
+        Update the game state and all the bot states
+        """
         for bot in self.bots:
             bot_state = self.bot_states[bot.pid]
             move = bot.move(self.board, bot_state)
@@ -57,8 +72,10 @@ class GameState:
                 print(colored(f"Player {id} has been killed :("))
                 self.bots.pop(bot.pid)
 
-
-    def draw(self):
+    def draw(self) -> None:
+        """
+        Draws all components to the screen
+        """
         pass
 
 
