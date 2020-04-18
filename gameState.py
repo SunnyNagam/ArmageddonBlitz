@@ -6,6 +6,12 @@ from bot import Bot
 class GameState:
 
     def __init__(self, b_width, b_height, square_len=10):
+        """
+        Initialize the object
+        :param b_width: The number of squares horizontally
+        :param b_height: The number of squares vertically
+        :param square_len: How wide each square is in pixels
+        """
         pg.init()
 
         self.bots = dict()
@@ -20,23 +26,24 @@ class GameState:
         pg.display.set_caption("Armageddon Blitz")
 
         for row in range(b_width):
-            self.board[row].append(list())
+            self.board.append(list())
             for col in range(b_height):
-                self.board[row][col] = 0
+                self.board.append(0)
 
     def add_bot(self, bot: Bot, color: pg.Color):
         self.bots.update({bot.pid: (bot, color)})
 
     def run_game_loop(self):
         while True:
-            self.update()
+            #self.update()
             self.draw()
             self.clock.tick(60)
 
     def update(self):
         for bot in self.bots:
-            move = bot.move(self.board)
-            self.bot_states[bot.pid].move(move)
+            bot_state = self.bot_states[bot.pid]
+            move = bot.move(self.board, bot_state)
+            bot_state.move(move)
 
         for bot in self.bot_states:
             pos = bot.pos
