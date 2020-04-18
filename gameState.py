@@ -19,6 +19,7 @@ class GameState:
 
         self.b_width = b_width
         self.b_height = b_height
+        self.square_width = square_len
         self.board = list()
 
         self.clock = pg.time.Clock()
@@ -28,7 +29,7 @@ class GameState:
         for row in range(b_width):
             self.board.append(list())
             for col in range(b_height):
-                self.board.append(0)
+                self.board[row].append(0)
 
     def add_bot(self, bot: Bot, color: pg.Color) -> None:
         """
@@ -79,11 +80,16 @@ class GameState:
         bg_colour = (255, 255, 255)
         self.screen.fill(bg_colour)
 
-        for x in self.b_width:
-            for y in self.b_height:
+        for x in range(self.b_width):
+            for y in range(self.b_height):
                 pid = self.board[x][y]
-                colour = self.bots.get(pid)[1]
-                self.screen.set
+                if bot := self.bots.get(pid):
+                    colour = bot[1]
+                else:
+                    colour = pg.Color(255, 255, 255)
+                rect = (x*self.square_width, y*self.square_width, self.square_width, self.square_width)
+                pg.draw.rect(self.screen, colour, rect, 0)
+                pg.draw.rect(self.screen, pg.Color('black'), rect, 1)
 
         pg.display.flip()
         pass
