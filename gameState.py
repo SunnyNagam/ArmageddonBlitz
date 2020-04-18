@@ -27,6 +27,8 @@ class GameState:
         self.board = list()
 
         self.clock = pg.time.Clock()
+        self.curr_time = pg.time.get_ticks()
+
         self.screen = pg.display.set_mode((b_width * square_len, b_height * square_len))
         self.bot_sprite = pg.transform.scale(pg.image.load(BOT_SPRITE_PATH),
                                              (self.square_width, self.square_width))
@@ -55,7 +57,13 @@ class GameState:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     running = False
-            self.update()
+
+            time = pg.time.get_ticks()
+            if time - self.curr_time > 1000:
+                self.update()
+                self.curr_time = time
+                # TODO if all the bots are dead. Display score
+
             self.draw()
             self.clock.tick(60)
 
@@ -86,6 +94,7 @@ class GameState:
             self.bot_states.get(pid).move(move)
 
         # Determine if any of the bots died
+        dead_bots = list()
         for bot in self.bot_states.values():
             pos = bot.pos
             # Kill any bots that ran off the board
@@ -96,7 +105,11 @@ class GameState:
             value = self.board[pos[0]][pos[1]]
             if(value != bot.pid) and (value != 0):
                 print(colored(f"Player {bot.pid} has been killed :("))
-                self.bots.pop(bot.pid)
+                dead_bots.append(bot.pid)
+
+        for pid in dead_bots:
+            self.bots.pop(pid)
+            self.bot_states.pop(pid)
 
     def draw(self) -> None:
         """
