@@ -1,6 +1,9 @@
 from termcolor import colored
 import pygame as pg
-from bot import Bot
+import math
+from bot import Bot, BotState
+
+BOT_SPRITE_PATH = "./res/bot.png"
 
 
 class GameState:
@@ -20,7 +23,10 @@ class GameState:
         self.b_width = b_width
         self.b_height = b_height
         self.square_width = square_len
+        self.init_pos = (math.floor(b_width/2), math.floor(b_height/2))
         self.board = list()
+        self.bot_sprite = pg.transform.scale(pg.image.load(BOT_SPRITE_PATH),
+                                             (self.square_width, self.square_width))
 
         self.clock = pg.time.Clock()
         self.screen = pg.display.set_mode((b_width * square_len, b_height * square_len))
@@ -37,7 +43,8 @@ class GameState:
         :param bot: The bot to add
         :param color: The bot's color to be used when coloring rectangles
         """
-        self.bots.update({bot.pid: (bot, color)})
+        self.bots.update({bot.pid: bot})
+        self.bot_states.update({bot.pid: BotState(bot.pid, self.init_pos, color)})
 
     def run_game_loop(self) -> None:
         """
@@ -83,13 +90,22 @@ class GameState:
         for x in range(self.b_width):
             for y in range(self.b_height):
                 pid = self.board[x][y]
-                if bot := self.bots.get(pid):
-                    colour = bot[1]
+                if bot := self.bot_states.get(pid):
+                    colour = bot.color
                 else:
                     colour = pg.Color(255, 255, 255)
                 rect = (x*self.square_width, y*self.square_width, self.square_width, self.square_width)
                 pg.draw.rect(self.screen, colour, rect, 0)
                 pg.draw.rect(self.screen, pg.Color('black'), rect, 1)
+
+        for bot in self.bot_states.values():
+            # Add an outline to each bot's square
+            rect = (bot.pos[0]*self.square_width, bot.pos[1]*self.square_width, self.square_width, self.square_width)
+            pg.draw.rect(self.screen, bot.color, rect, 2)
+
+            # Draw the transformed bot sprite
+            trans_pos = (bot.pos[0] * self.square_width, bot.pos[1] * self.square_width)
+            self.screen.blit(self.bot_sprite, trans_pos)
 
         pg.display.flip()
         pass

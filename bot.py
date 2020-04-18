@@ -34,9 +34,8 @@ class Bot:
 	The base class to inherit from for each player
 	"""
 
-	def __init__(self, pid: int, pos: (int, int)):
+	def __init__(self, pid: int):
 		self.pid = pid
-		self.pos = pos
 
 	def move(self, board: [[int]], bot_state: BotState) -> Move:
 		"""
