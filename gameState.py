@@ -1,7 +1,7 @@
 from termcolor import colored
 import pygame as pg
 import math
-from bot import Bot, BotState
+from bots.bot import Bot, BotState
 
 BOT_SPRITE_PATH = "./res/bot.png"
 
@@ -25,11 +25,11 @@ class GameState:
         self.square_width = square_len
         self.init_pos = (math.floor(b_width/2), math.floor(b_height/2))
         self.board = list()
-        self.bot_sprite = pg.transform.scale(pg.image.load(BOT_SPRITE_PATH),
-                                             (self.square_width, self.square_width))
 
         self.clock = pg.time.Clock()
         self.screen = pg.display.set_mode((b_width * square_len, b_height * square_len))
+        self.bot_sprite = pg.transform.scale(pg.image.load(BOT_SPRITE_PATH),
+                                             (self.square_width, self.square_width))
         pg.display.set_caption("Armageddon Blitz")
 
         for row in range(b_width):
@@ -111,7 +111,7 @@ class GameState:
                 if bot := self.bot_states.get(pid):
                     colour = bot.color
                 else:
-                    colour = pg.Color(255, 255, 255)
+                    colour = pg.Color('white')
                 rect = (x*self.square_width, y*self.square_width, self.square_width, self.square_width)
                 pg.draw.rect(self.screen, colour, rect, 0)
                 pg.draw.rect(self.screen, pg.Color('black'), rect, 1)
@@ -127,5 +127,3 @@ class GameState:
 
         pg.display.flip()
         pass
-
-
