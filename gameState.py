@@ -109,6 +109,8 @@ class GameState:
         for pid in dead_bots:
             if pid in self.bots:
                 print(colored(f"Player {pid} has been killed :("))
+                pos = self.bot_states.get(pid).pos
+                #self.board[pos[0]][pos[1]] = 0
                 self.bots.pop(pid)
 
     def draw(self) -> None:
@@ -121,12 +123,12 @@ class GameState:
         for x in range(self.b_width):
             for y in range(self.b_height):
                 pid = self.board[x][y]
-                if bot := self.bot_states.get(pid):
-                    colour = bot.color
+                if pid in self.bot_states:
+                    color = self.bot_states.get(pid).color
                 else:
-                    colour = pg.Color('white')
+                    color = pg.Color('white')
                 rect = (x*self.square_width, y*self.square_width, self.square_width, self.square_width)
-                pg.draw.rect(self.screen, colour, rect, 0)
+                pg.draw.rect(self.screen, color, rect, 0)
                 pg.draw.rect(self.screen, pg.Color('black'), rect, 1)
 
         for bot in self.bot_states.values():

@@ -44,13 +44,15 @@ class BotState:
         elif action == Move.JUMP:
             self.pos = (self.pos[0] + (2 * update[0]), self.pos[1] + (2 * update[1]))
         elif action == Move.TURN_RIGHT:
-            self.dir += 1
-            if self.dir > Dir.LEFT:
+            if self.dir == Dir.LEFT:
                 self.dir = Dir.UP
+            else:
+                self.dir = Dir(self.dir.value + 1)
         elif action == Move.TURN_LEFT:
-            self.dir -= 1
-            if self.dir < Dir.UP:
+            if self.dir == Dir.UP:
                 self.dir = Dir.LEFT
+            else:
+                self.dir = Dir(self.dir.value - 1)
 
     def get_update_scale(self) -> (int, int):
         """
