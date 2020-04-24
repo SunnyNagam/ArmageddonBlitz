@@ -76,7 +76,6 @@ class GameState:
         for bot in self.bots.values():
             bot_state = self.bot_states.get(bot.pid)
             move = bot.move(self.board, bot_state)
-            #print(colored(f"Player {bot.pid} has moved {move}"))
             update_tile = True
             for pid, other_bot in self.bot_states.items():
                 if pid == bot.pid:
@@ -98,9 +97,10 @@ class GameState:
         for bot in self.bot_states.values():
             pos = bot.pos
             # Kill any bots that ran off the board
-            if pos[0] < 0 or pos[0] > self.b_width\
-                    or pos[1] < 0 or pos[1] > self.b_height:
+            if pos[0] < 0 or pos[0] >= self.b_width\
+                    or pos[1] < 0 or pos[1] >= self.b_height:
                 dead_bots.append(bot.pid)
+                continue
 
             value = self.board[pos[0]][pos[1]]
             if(value != bot.pid) and (value != 0):

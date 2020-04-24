@@ -16,6 +16,6 @@ if __name__ == "__main__":
     pygame.display.set_caption("Armageddon Blitz")
 
     game = GameState(gameWidth, gameHeight, blockWidth)
-    game.add_bot(Jack(69), Color('cyan'))
+    game.add_bot(Jack(69), Color('orange'))
     game.add_bot(Sunny(420), Color('red'))
     game.run_game_loop()
