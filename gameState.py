@@ -76,7 +76,7 @@ class GameState:
         for bot in self.bots.values():
             bot_state = self.bot_states.get(bot.pid)
             move = bot.move(self.board, bot_state)
-
+            #print(colored(f"Player {bot.pid} has moved {move}"))
             update_tile = True
             for pid, other_bot in self.bot_states.items():
                 if pid == bot.pid:

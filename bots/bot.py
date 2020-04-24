@@ -61,11 +61,11 @@ class BotState:
         if self.dir == Dir.UP:
             update = (0, -1)
         elif self.dir == Dir.LEFT:
-            update = (1, 0)
+            update = (-1, 0)
         elif self.dir == Dir.DOWN:
             update = (0, 1)
         elif self.dir == Dir.RIGHT:
-            update = (-1, 0)
+            update = (1, 0)
         return update
 
 
