@@ -59,7 +59,7 @@ class GameState:
                     running = False
 
             time = pg.time.get_ticks()
-            if time - self.curr_time > 1000:
+            if time - self.curr_time > 200:
                 self.update()
                 self.curr_time = time
                 # TODO if all the bots are dead. Display score
@@ -109,8 +109,6 @@ class GameState:
         for pid in dead_bots:
             if pid in self.bots:
                 print(colored(f"Player {pid} has been killed :("))
-                pos = self.bot_states.get(pid).pos
-                #self.board[pos[0]][pos[1]] = 0
                 self.bots.pop(pid)
 
     def draw(self) -> None:
